@@ -1,0 +1,128 @@
+------------------------------------------------------------------------------------------------
+
+MAXI
+
+------------------------------------------------------------------------------------------------
+
+CLIENTES
+
+----------------------------------
+
+*CREAR CUENTA (CLIENTE) -> RUT, NOMBRE, APELLIDO, NUMERO TELEFONO, CORREO, DIRECCION, ROL
+	       (ROLES)  -> id_rol, ROL, descripción		->> commit 01: tablas creadas
+
+
+			-crear y modificar, consultar id   ->> proximo commit crear cruds
+
+
+*REALIZAR PEDIDO -> (pedido) id pedido, rut, fecha pedido, neto, iva, total    ->> proximo commit crear tablas pedido
+		 -> (detalle pedido) idpedido, id producto, descripción perfume, cantidad, valor	
+
+			
+
+*CONSULTAR PEDIDO (estado) idpedido, rut, estado
+-consulta pedido especifico				->> proximo commit cruds, crear tabla estado
+-consultar pedido total de compras
+
+
+----------------------------------
+
+GERENTE DE SUCURSAL
+*GESTION DE INVENTARIO (STOCK)       ->>GERENTE DE SUCURSAL 1er servicio listo
+					CRUD COMPLETO para modificaciones en el inventario
+					/stock
+				
+inventario (tabla creada) -> idproducto, descripcion, concentración ,fecha lanzamiento, cantidad, valor
+-añadir perfume, actualizar, borrar , Ver perfumes
+-->> crud listo
+
+
+*GENERAR REPORTES
+-listar reportes de venta ->  GET A PEDIDO
+-listar reportes de stock -> GET A INVENTARIO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------
+
+GONZALO
+
+------------------------------------------------------------------------------------------------
+
+
+*INICIAR SESION POR TOKEN    ->> ambos
+------------------------------
+ADMINISTRADOR DEL SISTEMA
+
+*GESTION USUARIO -> MODIFICA TABLA (CLIENTE, ROLES) 
+-actualizar *rol, eliminar, listar, consultar id
+
+
+
+
+----------------------------------------------
+LOGISTICA VER -> PEDIDO  (GET A ESTADO)
+*GESTIONAR ENVIO
+-AGREGAR ESTADO, VER ESTADO
+(AGREGAR MUCHOS ESTADOS)
+
+
+
+-----------------------------------
+EMPLEADO DE VENTAS
+-----------------------------------
+*CONSULTAR INVENTARIO
+-VER INVENTARIO COMPLETO (GET TABLA INVENTARIO)
+
+-VER INVENTARIO POR ID (buscar por id en tabla inventario (id_producto))
+
+
+
+*GENERAR FACTURAS  (FACTURA) -> idpedido, idproducto, nombre, fecha lanzamiento, cantidad, valor
+-crear factura, editar, eliminar, ver factura lista 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
