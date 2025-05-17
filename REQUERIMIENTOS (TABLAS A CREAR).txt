@@ -6,16 +6,19 @@ MAXI
 
 CLIENTES
 
-----------------------------------
+---------------------------------------------------------------------------------------------
+
+
+
 
 *CREAR CUENTA (CLIENTE) -> RUT, NOMBRE, APELLIDO, NUMERO TELEFONO, CORREO, DIRECCION, ROL
+
 	       (ROLES)  -> id_rol, ROL, descripción		->> commit 01: tablas creadas
+			-crear y modificar, consultar id   ->> 	    commit 02; cruds listos
 
 
-			-crear y modificar, consultar id   ->> proximo commit crear cruds
 
-
-*REALIZAR PEDIDO -> (pedido) id pedido, rut, fecha pedido, neto, iva, total    ->> proximo commit crear tablas pedido
+*REALIZAR PEDIDO -> (pedido) id pedido, rut, fecha pedido, neto, iva, total   	 ->> commit 02 tablas creadas
 		 -> (detalle pedido) idpedido, id producto, descripción perfume, cantidad, valor	
 
 			
@@ -25,21 +28,43 @@ CLIENTES
 -consultar pedido total de compras
 
 
+
+
+
 ----------------------------------
 
 GERENTE DE SUCURSAL
+
+----------------------------------
+
+
+
+
+
 *GESTION DE INVENTARIO (STOCK)       ->>GERENTE DE SUCURSAL 1er servicio listo
 					CRUD COMPLETO para modificaciones en el inventario
-					/stock
-				
+					/stock 
 inventario (tabla creada) -> idproducto, descripcion, concentración ,fecha lanzamiento, cantidad, valor
 -añadir perfume, actualizar, borrar , Ver perfumes
 -->> crud listo
 
 
+
+
+
+
+
 *GENERAR REPORTES
 -listar reportes de venta ->  GET A PEDIDO
 -listar reportes de stock -> GET A INVENTARIO
+
+
+
+
+
+
+
+
 
 
 
