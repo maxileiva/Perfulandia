@@ -13,8 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/gerente")
-
-
 public class GerenteController {
 
     @Autowired
@@ -41,4 +39,7 @@ public class GerenteController {
         gerenteService.deleteGerente(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    
+
 }

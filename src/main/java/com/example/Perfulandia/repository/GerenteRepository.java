@@ -1,5 +1,4 @@
 package com.example.Perfulandia.repository;
-
 import com.example.Perfulandia.model.Gerente;
 import org.springframework.data.jpa.repository.JpaRepository;
 

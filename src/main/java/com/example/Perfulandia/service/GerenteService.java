@@ -1,7 +1,5 @@
 package com.example.Perfulandia.service;
-
 import com.example.Perfulandia.model.Gerente;
-
 import com.example.Perfulandia.repository.GerenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,4 +31,5 @@ public class GerenteService {
     public void deleteGerente(@PathVariable Integer id) {
         gerenteRepository.deleteById(id);
     }
+
 }
