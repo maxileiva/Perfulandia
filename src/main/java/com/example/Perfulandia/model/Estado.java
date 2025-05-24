@@ -28,7 +28,7 @@ public class Estado {
     private String rut;
 
     @Column(nullable = false)
-    private BigDecimal Estado_Pedido;
+    private String Estado_Pedido;
 
 }
 
