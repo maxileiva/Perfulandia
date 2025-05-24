@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
+
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "Detalle_Pedido")
@@ -19,8 +21,10 @@ public class DetallePedido {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer N;
 
-    @Column (length = 50, nullable = false)
-    private String id_pedido;
+    @ManyToOne
+    @JoinColumn(name = "id_pedido", referencedColumnName = "id_pedido")
+    @JsonBackReference
+    private Pedido pedido;
 
     @Column (length = 50, nullable = false)
     private String id_producto;

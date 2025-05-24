@@ -14,6 +14,8 @@ public class GerenteRVService {
     private GerentePedidoRepository gerentePedidoRepository;
 
     public List<Pedido> getAllPedido() {
-        return gerentePedidoRepository.findAll();
+        return gerentePedidoRepository.findAllWithDetalles();
     }
 }
+
+
