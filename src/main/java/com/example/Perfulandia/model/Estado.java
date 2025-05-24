@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 @Table(name = "Estado")
@@ -21,8 +23,11 @@ public class Estado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_estado;
 
-    @Column(length = 50, nullable = false)
-    private String id_pedido;
+    @OneToOne
+    @JoinColumn(name = "id_pedido", referencedColumnName = "id_pedido")
+    @JsonBackReference
+    
+    private Pedido pedido;
 
     @Column(nullable = false)
     private String rut;

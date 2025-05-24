@@ -42,3 +42,13 @@ public class Cliente {
 }
 
 
+//Formato INGRESAR CLIENTES
+   // "rut": "XXXXXXXXX",
+   // "nombre": "XXXXXX",
+   // "apellido": "XXXXXX",
+   // "telefono": "XXXXXXXXX",
+   // "correo": "XXXXXX@GMAIL.COM",
+   // "direccion": "XXX XX X",
+   // "rol":"X"
+
+//ROLES: 1-> Administador del sistema, 2-> Gerente de sucursal, 3->Empleado de ventas, 4-> Logistica, 5-> Clientes
