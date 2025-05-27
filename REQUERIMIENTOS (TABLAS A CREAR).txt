@@ -13,7 +13,9 @@ MAXI
 
 *CREAR CUENTA (CLIENTE) -> RUT, NOMBRE, APELLIDO, NUMERO TELEFONO, CORREO, DIRECCION, ROL
 	       (ROLES)  -> id_rol, ROL, descripción		->> commit 01: tablas creadas
-			-crear y modificar, consultar id   ->> 	    commit 02; cruds listos
+			
+
+-crear y modificar, consultar id   ->> 	    commit 02; cruds listos
 
 
 
@@ -100,15 +102,11 @@ inventario (tabla creada) -> idproducto, descripcion, concentración ,fecha lanz
 
 GONZALO
 
-------------------------------------------------------------------------------------------------
-
-
-*INICIAR SESION POR TOKEN    ->> ambos
 ------------------------------
 ADMINISTRADOR DEL SISTEMA
 
-*GESTION USUARIO -> MODIFICA TABLA (CLIENTE, ROLES) 
--actualizar *rol, eliminar, listar, consultar id
+*GESTION USUARIO -> MODIFICA TABLA (CLIENTE) --> TRABAJA SOBRE TABLA CLIENTE
+		   -actualizar, eliminar, listar, consultar id
 
 
 
@@ -116,22 +114,23 @@ ADMINISTRADOR DEL SISTEMA
 ----------------------------------------------
 LOGISTICA VER -> PEDIDO  (GET A ESTADO)
 *GESTIONAR ENVIO
--AGREGAR ESTADO, VER ESTADO
-(AGREGAR MUCHOS ESTADOS)
+-actualizar ESTADO, VER ESTADO
 
 
 
 -----------------------------------
 EMPLEADO DE VENTAS
 -----------------------------------
+
 *CONSULTAR INVENTARIO
--VER INVENTARIO COMPLETO (GET TABLA INVENTARIO)
+-VER INVENTARIO COMPLETO (GET TABLA Gerente)
 
 -VER INVENTARIO POR ID (buscar por id en tabla inventario (id_producto))
 
 
 
 *GENERAR FACTURAS  (FACTURA) -> idpedido, idproducto, nombre, fecha lanzamiento, cantidad, valor
+
 -crear factura, editar, eliminar, ver factura lista 
 
 
