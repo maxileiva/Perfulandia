@@ -21,7 +21,7 @@ public class Gerente {
     private Integer id;
 
     @Column (length = 50, nullable = false)
-    private String Descripcion;
+    private String descripcion;
 
     @Column (nullable = false)
     private String concentracion;
@@ -30,9 +30,10 @@ public class Gerente {
     private String fecha_lanzamiento;
 
     @Column (nullable = false)
-    private String Cantidad;
+    private String cantidad;
 
     @Column (nullable = false)
     private BigDecimal valor;
 
 }
+

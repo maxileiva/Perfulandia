@@ -27,7 +27,7 @@ public class PedidoService {
         Estado estado = new Estado();
         estado.setPedido(pedidoGuardado);
         estado.setRut(pedidoGuardado.getRutc());
-        estado.setEstado_Pedido("En camino");
+        estado.setEstadoPedido("En camino");
 
         estadoRepository.save(estado);
 

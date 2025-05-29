@@ -31,7 +31,7 @@ public class Estado {
     private String rut;
 
     @Column(nullable = false)
-    private String Estado_Pedido;
+    private String estadoPedido;
 
 }
 
