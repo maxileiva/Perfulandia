@@ -4,59 +4,43 @@ import com.example.Perfulandia.model.Cliente;
 import com.example.Perfulandia.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 import java.util.Optional;
+import java.util.List;
 
 
 @Service
 public class ClienteService {
     @Autowired
-    private ClienteRepository clienteRepository;    
+    private ClienteRepository clienteRepository;
 
-    public Cliente createCliente(@RequestBody Cliente cliente) {
+    public Cliente createCliente(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
 
-    public Cliente getClienteId(Integer id) {
-    Optional<Cliente> cliente = clienteRepository.findById(id);
-    return cliente.orElse(null);
+    public Optional<Cliente> findById(Integer id) {
+        return clienteRepository.findById(id);
     }
 
-    // Integer id;
-
+    public List<Cliente> listarClientes() {
+        return clienteRepository.findAll();
+    }
 
     public Cliente updateCliente(Cliente cliente) {
-    return clienteRepository.save(cliente);
+        if (cliente.getId() != null && clienteRepository.existsById(cliente.getId().intValue())) {
+            return clienteRepository.save(cliente);
+        }
+        return null;
     }
 
-    public List<Cliente> listarCliente() {
-    
-        throw new UnsupportedOperationException("Unimplemented method 'listarCliente'");
-    }
-
-public Optional<Cliente> obtenerClientePorId(Integer id) {
-    return clienteRepository.findById(id);
-}
-
-    
-
-    public Cliente actualizarCliente(Integer id, Cliente cliente) {
-       
-        throw new UnsupportedOperationException("Unimplemented method 'actualizarCliente'");
+    public Optional<Cliente> obtenerClientePorId(Integer id) {
+        return clienteRepository.findById(id);
     }
 
     public void eliminarCliente(Integer id) {
-      
-        throw new UnsupportedOperationException("Unimplemented method 'eliminarCliente'");
+        if (clienteRepository.existsById(id)) {
+            clienteRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Cliente no encontrado con ID: " + id + " para eliminar.");
+        }
     }
-
-    public List<Cliente> listarAdministrador() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listarAdministrador'");
-    }   
-
-    
 }
-
