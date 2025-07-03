@@ -8,6 +8,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.http.MediaType;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -59,7 +60,10 @@ public class AdministradorController {
         Cliente actualizado = clienteService.updateCliente(cliente);
 
         if (actualizado != null) {
-            return ResponseEntity.ok(assembler.toModel(actualizado));
+            
+            return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(assembler.toModel(actualizado));
         } else {
             return ResponseEntity.notFound().build();
         }

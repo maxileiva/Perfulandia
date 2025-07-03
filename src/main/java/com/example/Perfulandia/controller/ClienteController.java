@@ -3,7 +3,6 @@ package com.example.Perfulandia.controller;
 import com.example.Perfulandia.model.Cliente;
 import com.example.Perfulandia.service.ClienteService;
 import com.example.Perfulandia.assemblers.ClienteModelAssembler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

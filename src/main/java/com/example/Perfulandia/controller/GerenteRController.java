@@ -16,7 +16,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/gerente/reporte/stock")
-public class GerenteRControlller {
+public class GerenteRController {
 
     /**
      * Servicio encargado de la lógica de negocio relacionada con los reportes de gerentes (stock).
@@ -30,7 +30,7 @@ public class GerenteRControlller {
     private final GerenteRModelAssembler assembler;
 
     // Constructor para inyectar el ensamblador
-    public GerenteRControlller(GerenteRModelAssembler assembler) {
+    public GerenteRController(GerenteRModelAssembler assembler) {
         this.assembler = assembler;
     }
 
@@ -48,6 +48,6 @@ public class GerenteRControlller {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(
                 CollectionModel.of(gerentesConEnlaces,
-                        linkTo(methodOn(GerenteRControlller.class).getAllGerentes()).withSelfRel()));
+                        linkTo(methodOn(GerenteRController.class).getAllGerentes()).withSelfRel()));
     }
 }

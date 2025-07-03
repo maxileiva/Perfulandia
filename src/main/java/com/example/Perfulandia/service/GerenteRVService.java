@@ -16,6 +16,10 @@ public class GerenteRVService {
     public List<Pedido> getAllPedido() {
         return gerentePedidoRepository.findAllWithDetalles();
     }
+
+    public Pedido findById(Integer id) {
+        return gerentePedidoRepository.findById(id).orElse(null);
+    }
 }
 
 

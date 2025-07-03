@@ -1,6 +1,6 @@
 package com.example.Perfulandia.assemblers;
 
-import com.example.Perfulandia.controller.GerenteRControlller;
+import com.example.Perfulandia.controller.GerenteRController;
 import com.example.Perfulandia.model.Gerente;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -25,7 +25,7 @@ public class GerenteRModelAssembler implements RepresentationModelAssembler<Gere
     public EntityModel<Gerente> toModel(Gerente gerente) {
         return EntityModel.of(gerente,
                 // Enlace a la colección de gerentes: apunta al método 'getAllGerentes' del GerenteRControlller
-                linkTo(methodOn(GerenteRControlller.class).getAllGerentes()).withRel("reporte-stock")
+                linkTo(methodOn(GerenteRController.class).getAllGerentes()).withRel("reporte-stock")
         );
     }
 }

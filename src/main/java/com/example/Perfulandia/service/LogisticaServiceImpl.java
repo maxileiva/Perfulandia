@@ -26,10 +26,9 @@ public class LogisticaServiceImpl implements LogisticaService {
     }
 
     @Override
-        public Estado updateEstado(Estado estado) {
-            return estadoRepository.save(estado);
-        }
-
+    public Estado updateEstado(Estado estado) {
+        return estadoRepository.save(estado);
+    }
     @Override
     public List<Estado> buscarPorEstado(String estadoPedido) {
         return estadoRepository.findAll().stream()
