@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
@@ -31,6 +35,12 @@ public class PedidosController {
         this.assembler = assembler;
     }
 
+    @Operation(summary = "Crear pedido", description = "Crea un nuevo pedido en el sistema con los detalles proporcionados")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido creado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Solicitud inválida o datos incompletos"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor al crear el pedido")
+    })
     @PostMapping
     public ResponseEntity<EntityModel<Pedido>> crearPedido(@RequestBody Pedido pedido) {
         Pedido nuevoPedido = pedidoService.guardarPedido(pedido);
@@ -40,6 +50,12 @@ public class PedidosController {
         return ResponseEntity.ok(pedidoModel);
     }
 
+    @Operation(summary = "Buscar pedidos por RUT", description = "Obtiene todos los pedidos asociados a un cliente identificado por su RUT")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedidos encontrados y listados exitosamente"),
+        @ApiResponse(responseCode = "404", description = "No se encontraron pedidos para el RUT especificado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor al buscar pedidos")
+    })
     @GetMapping("{rutc}")
     public ResponseEntity<CollectionModel<EntityModel<Pedido>>> buscaPedido(@PathVariable String rutc) {
         List<Pedido> pedidos = pedidoService.getPedidoRutc(rutc);
@@ -56,6 +72,12 @@ public class PedidosController {
                         linkTo(methodOn(PedidosController.class).getAllGerentes()).withRel("catalogoGerentes")));
     }
 
+    @Operation(summary = "Buscar pedido por ID", description = "Obtiene un pedido específico identificado por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido encontrado y obtenido exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Pedido no encontrado con el ID especificado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor al obtener el pedido")
+    })
     @GetMapping("/id/{id_pedido}")
     public ResponseEntity<EntityModel<Pedido>> buscaPedidoId_pedido(@PathVariable Integer id_pedido) {
         Pedido pedido = pedidoService.getPedidoId_pedido(id_pedido);
@@ -69,6 +91,11 @@ public class PedidosController {
         }
     }
 
+    @Operation(summary = "Listar gerentes", description = "Obtiene el catálogo completo de gerentes disponibles")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Listado de gerentes obtenido exitosamente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor al obtener la lista de gerentes")
+    })
     @GetMapping("/catalogo")
     public ResponseEntity<CollectionModel<EntityModel<Gerente>>> getAllGerentes() {
         List<Gerente> gerentes = gerenteService.getAllGerentes();
@@ -81,27 +108,3 @@ public class PedidosController {
                         linkTo(methodOn(PedidosController.class).getAllGerentes()).withSelfRel()));
     }
 }
-
-
-/* {
-  "rutc": "218003065",
-  "fecha_pedido": "2025-05-23",
-  "neto": "200000",
-  "iva": "7000",
-  "total": 207000,
-  "detallePedido": [
-    {
-      "id_producto": "1",
-      "descripcion": "Armani Stronger With You",
-      "cantidad": "1",
-      "valor": 98990.0
-    },
-    {
-      "id_producto": "2",
-      "descripcion": "Jean Paul Glautier Scandal",
-      "cantidad": "1",
-      "valor": 124990.0
-    }
-  ]
-}
-*/

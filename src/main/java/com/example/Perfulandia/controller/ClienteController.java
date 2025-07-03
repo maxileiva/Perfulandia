@@ -3,15 +3,19 @@ package com.example.Perfulandia.controller;
 import com.example.Perfulandia.model.Cliente;
 import com.example.Perfulandia.service.ClienteService;
 import com.example.Perfulandia.assemblers.ClienteModelAssembler;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/cliente")
@@ -25,8 +29,14 @@ public class ClienteController {
         this.assembler = assembler;
     }
 
+    @Operation(summary = "Crear un nuevo cliente", description = "Crea un nuevo cliente en el sistema con registro en base de datos")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Cliente creado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PostMapping
-    public ResponseEntity<?> createCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<?> crearCliente(@RequestBody Cliente cliente) {
         Map<String, String> errors = new HashMap<>();
 
         if (cliente.getRut() == null || cliente.getRut().length() != 9) {
@@ -52,27 +62,39 @@ public class ClienteController {
         }
 
         Cliente nuevoCliente = clienteService.createCliente(cliente);
-        EntityModel<Cliente> entityModel = assembler.toModel(nuevoCliente);
-
-        // Agregar enlace para obtener el cliente creado
-        entityModel.add(linkTo(methodOn(ClienteController.class).buscaCliente(nuevoCliente.getId())).withSelfRel());
-
-        return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
+        return new ResponseEntity<>(assembler.toModel(nuevoCliente), HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
+    @Operation(summary = "Buscar cliente por ID", description = "Busca un cliente por su ID en base de datos")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
+        @ApiResponse(responseCode = "404", description = "Cliente no encontrado"),
+    })
+    @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Cliente>> buscaCliente(@PathVariable Long id) {
         return clienteService.findById(id.intValue())
-                .map(c -> {
-                    EntityModel<Cliente> entityModel = assembler.toModel(c);
-                    // Agregar enlace para actualizar cliente
-                    entityModel.add(linkTo(methodOn(ClienteController.class).actualizarCliente(id, c)).withRel("actualizar"));
-                    return ResponseEntity.ok(entityModel);
-                })
+                .map(assembler::toModel)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("{id}")
+    @Operation(summary = "Listar todos los clientes", description = "Obtiene una lista con todos los clientes")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de clientes obtenida correctamente"),
+    })
+    @GetMapping
+    public List<Cliente> listarClientes() {
+        return clienteService.listarClientes();
+    }
+
+    @Operation(summary = "Actualizar cliente", description = "Actualiza un cliente existente por ID (actualiza bd)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Cliente actualizado correctamente"),
+        @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+        @ApiResponse(responseCode = "404", description = "Cliente no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @PutMapping("/{id}")
     public ResponseEntity<?> actualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         if (cliente.getId() != null && !cliente.getId().equals(id)) {
             Map<String, String> errorIdMismatch = new HashMap<>();
@@ -82,6 +104,7 @@ public class ClienteController {
 
         cliente.setId(id);
         Map<String, String> errors = new HashMap<>();
+
         if (cliente.getRut() == null || cliente.getRut().length() != 9) {
             errors.put("rut", "El RUT debe tener exactamente 9 caracteres.");
         }
@@ -99,16 +122,15 @@ public class ClienteController {
         } catch (NumberFormatException e) {
             errors.put("rol", "El rol debe ser un valor numérico entre 1 y 5.");
         }
+
         if (!errors.isEmpty()) {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+
         Cliente updatedCliente = clienteService.updateCliente(cliente);
 
         if (updatedCliente != null) {
-            EntityModel<Cliente> entityModel = assembler.toModel(updatedCliente);
-            // Agregar enlace self
-            entityModel.add(linkTo(methodOn(ClienteController.class).buscaCliente(id)).withSelfRel());
-            return ResponseEntity.ok(entityModel);
+            return ResponseEntity.ok(assembler.toModel(updatedCliente));
         } else {
             return ResponseEntity.notFound().build();
         }

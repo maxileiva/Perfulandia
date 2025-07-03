@@ -3,6 +3,11 @@ package com.example.Perfulandia.controller;
 import com.example.Perfulandia.model.Gerente;
 import com.example.Perfulandia.service.GerenteRService;
 import com.example.Perfulandia.assemblers.GerenteRModelAssembler;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;    
@@ -27,6 +32,11 @@ public class GerenteRController {
         this.assembler = assembler;
     }
 
+    @Operation(summary = "Obtener reporte de stock de gerentes", description = "Devuelve una lista de gerentes con reporte de stock")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Reporte de stock obtenido correctamente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<Gerente>>> getAllGerentes() {
         List<Gerente> gerentes = gerenteRService.getAllGerentes();

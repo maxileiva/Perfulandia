@@ -3,6 +3,11 @@ package com.example.Perfulandia.controller;
 import com.example.Perfulandia.model.Estado;
 import com.example.Perfulandia.service.LogisticaService;
 import com.example.Perfulandia.assemblers.EstadoModelAssembler;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -30,6 +35,10 @@ public class EstadoController {
         this.assembler = assembler;
     }
 
+    @Operation(summary = "Obtener todos los estados", description = "Devuelve una lista con todos los estados disponibles")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de estados obtenida correctamente")
+    })
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<Estado>>> obtenerTodos() {
         List<Estado> estados = estadoService.obtenerTodos();
@@ -40,6 +49,11 @@ public class EstadoController {
                 linkTo(methodOn(EstadoController.class).obtenerTodos()).withSelfRel()));
     }
 
+    @Operation(summary = "Obtener estado por ID", description = "Obtiene un estado específico mediante su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Estado encontrado"),
+        @ApiResponse(responseCode = "404", description = "Estado no encontrado")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Estado>> obtenerPorId(@PathVariable Integer id) {
         return estadoService.obtenerPorId(id)
@@ -52,6 +66,13 @@ public class EstadoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Actualizar estado", description = "Actualiza un estado existente por ID. Solo valores 'En Camino' o 'Entregado' son válidos")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Estado actualizado correctamente"),
+        @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+        @ApiResponse(responseCode = "404", description = "Estado no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarEstado(@PathVariable Integer id, @RequestBody Estado estado) {
         String nuevoEstadoPedido = estado.getEstadoPedido();

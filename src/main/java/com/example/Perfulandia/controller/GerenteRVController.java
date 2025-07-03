@@ -3,6 +3,11 @@ package com.example.Perfulandia.controller;
 import com.example.Perfulandia.model.Pedido;
 import com.example.Perfulandia.service.GerenteRVService;
 import com.example.Perfulandia.assemblers.GerenteRVModelAssembler;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -27,6 +32,11 @@ public class GerenteRVController {
         this.assembler = assembler;
     }
 
+    @Operation(summary = "Listar todos los pedidos", description = "Obtiene una colección con todos los pedidos para reportes de gerente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedidos obtenidos exitosamente"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor al obtener pedidos")
+    })
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<Pedido>>> getAllPedido() {
         List<Pedido> pedidos = gerenteRVService.getAllPedido();
@@ -42,6 +52,12 @@ public class GerenteRVController {
                 ));
     }
 
+    @Operation(summary = "Obtener pedido por ID", description = "Obtiene el detalle de un pedido específico para reportes de gerente según su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Pedido encontrado y obtenido exitosamente"),
+        @ApiResponse(responseCode = "404", description = "Pedido no encontrado con el ID especificado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor al obtener el pedido")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Pedido>> getPedidoById(@PathVariable Integer id) {
         Pedido pedido = gerenteRVService.findById(id);
