@@ -35,18 +35,24 @@ public class AdministradorController {
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(
-                CollectionModel.of(clientesConEnlaces,
-                        linkTo(methodOn(AdministradorController.class).listarClientes()).withSelfRel())
-        );
+        CollectionModel<EntityModel<Cliente>> collectionModel = CollectionModel.of(clientesConEnlaces,
+                linkTo(methodOn(AdministradorController.class).listarClientes()).withSelfRel());
+
+        return ResponseEntity.ok(collectionModel);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Cliente>> obtenerPorId(@PathVariable Long id) {
         Optional<Cliente> cliente = clienteService.obtenerClientePorId(id.intValue());
-        return cliente.map(assembler::toModel)
-                      .map(ResponseEntity::ok)
-                      .orElseGet(() -> ResponseEntity.notFound().build());
+
+        return cliente.map(c -> {
+            EntityModel<Cliente> entityModel = assembler.toModel(c);
+            // Agregar enlace para actualizar este cliente
+            entityModel.add(linkTo(methodOn(AdministradorController.class).actualizar(id, c)).withRel("actualizar"));
+            // Agregar enlace para eliminar este cliente
+            entityModel.add(linkTo(methodOn(AdministradorController.class).eliminar(id)).withRel("eliminar"));
+            return ResponseEntity.ok(entityModel);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
@@ -60,10 +66,13 @@ public class AdministradorController {
         Cliente actualizado = clienteService.updateCliente(cliente);
 
         if (actualizado != null) {
-            
+            EntityModel<Cliente> entityModel = assembler.toModel(actualizado);
+            // Agregar enlace self al cliente actualizado
+            entityModel.add(linkTo(methodOn(AdministradorController.class).obtenerPorId(id)).withSelfRel());
+
             return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(assembler.toModel(actualizado));
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(entityModel);
         } else {
             return ResponseEntity.notFound().build();
         }

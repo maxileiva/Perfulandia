@@ -18,36 +18,27 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RequestMapping("/api/gerente/reporte/stock")
 public class GerenteRController {
 
-    /**
-     * Servicio encargado de la lógica de negocio relacionada con los reportes de gerentes (stock).
-     */
     @Autowired
     private GerenteRService gerenteRService;
 
-    /**
-     * Ensamblador para convertir objetos Gerente en EntityModel<Gerente> con enlaces HATEOAS.
-     */
     private final GerenteRModelAssembler assembler;
 
-    // Constructor para inyectar el ensamblador
     public GerenteRController(GerenteRModelAssembler assembler) {
         this.assembler = assembler;
     }
 
-    /**
-     * Obtiene una lista de todos los elementos de stock (Gerente) disponibles para el reporte.
-     * Ahora devuelve una CollectionModel con EntityModels de Gerente y enlaces HATEOAS.
-     *
-     * @return ResponseEntity con una CollectionModel de EntityModel<Gerente> (HTTP 200 OK).
-     */
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<Gerente>>> getAllGerentes() {
         List<Gerente> gerentes = gerenteRService.getAllGerentes();
         List<EntityModel<Gerente>> gerentesConEnlaces = gerentes.stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(
-                CollectionModel.of(gerentesConEnlaces,
-                        linkTo(methodOn(GerenteRController.class).getAllGerentes()).withSelfRel()));
+            CollectionModel.of(gerentesConEnlaces,
+                linkTo(methodOn(GerenteRController.class).getAllGerentes()).withSelfRel(),
+                linkTo(methodOn(GerenteRController.class).getAllGerentes()).withRel("reporteStock")
+            )
+        );
     }
 }

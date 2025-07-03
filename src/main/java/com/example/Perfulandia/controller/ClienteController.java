@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
 @RequestMapping("/api/cliente")
 public class ClienteController {
@@ -50,14 +52,23 @@ public class ClienteController {
         }
 
         Cliente nuevoCliente = clienteService.createCliente(cliente);
-        return new ResponseEntity<>(assembler.toModel(nuevoCliente), HttpStatus.CREATED);
+        EntityModel<Cliente> entityModel = assembler.toModel(nuevoCliente);
+
+        // Agregar enlace para obtener el cliente creado
+        entityModel.add(linkTo(methodOn(ClienteController.class).buscaCliente(nuevoCliente.getId())).withSelfRel());
+
+        return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<EntityModel<Cliente>> buscaCliente(@PathVariable Long id) {
         return clienteService.findById(id.intValue())
-                .map(assembler::toModel)
-                .map(ResponseEntity::ok)
+                .map(c -> {
+                    EntityModel<Cliente> entityModel = assembler.toModel(c);
+                    // Agregar enlace para actualizar cliente
+                    entityModel.add(linkTo(methodOn(ClienteController.class).actualizarCliente(id, c)).withRel("actualizar"));
+                    return ResponseEntity.ok(entityModel);
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -94,7 +105,10 @@ public class ClienteController {
         Cliente updatedCliente = clienteService.updateCliente(cliente);
 
         if (updatedCliente != null) {
-            return ResponseEntity.ok(assembler.toModel(updatedCliente));
+            EntityModel<Cliente> entityModel = assembler.toModel(updatedCliente);
+            // Agregar enlace self
+            entityModel.add(linkTo(methodOn(ClienteController.class).buscaCliente(id)).withSelfRel());
+            return ResponseEntity.ok(entityModel);
         } else {
             return ResponseEntity.notFound().build();
         }

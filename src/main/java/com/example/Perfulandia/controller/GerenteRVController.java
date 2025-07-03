@@ -27,9 +27,6 @@ public class GerenteRVController {
         this.assembler = assembler;
     }
 
-    /**
-     * Lista todos los pedidos disponibles para el reporte.
-     */
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<Pedido>>> getAllPedido() {
         List<Pedido> pedidos = gerenteRVService.getAllPedido();
@@ -40,17 +37,18 @@ public class GerenteRVController {
 
         return ResponseEntity.ok(
                 CollectionModel.of(pedidosConEnlaces,
-                        linkTo(methodOn(GerenteRVController.class).getAllPedido()).withSelfRel()));
+                        linkTo(methodOn(GerenteRVController.class).getAllPedido()).withSelfRel(),
+                        linkTo(methodOn(GerenteRVController.class).getAllPedido()).withRel("todosPedidosReporte")
+                ));
     }
 
-    /**
-     * (Opcional) Obtener un pedido por ID.
-     */
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Pedido>> getPedidoById(@PathVariable Integer id) {
-        Pedido pedido = gerenteRVService.findById(id); // Este método debe existir en el servicio
+        Pedido pedido = gerenteRVService.findById(id);
         if (pedido != null) {
-            return ResponseEntity.ok(assembler.toModel(pedido));
+            EntityModel<Pedido> pedidoModel = assembler.toModel(pedido)
+                .add(linkTo(methodOn(GerenteRVController.class).getAllPedido()).withRel("todosPedidosReporte"));
+            return ResponseEntity.ok(pedidoModel);
         } else {
             return ResponseEntity.notFound().build();
         }

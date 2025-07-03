@@ -16,12 +16,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
 @RequestMapping("/estado")
 public class EstadoController {
 
     @Autowired
-    private LogisticaService estadoService;  // Cambié el nombre para que sea más claro que es el servicio
+    private LogisticaService estadoService;  // Servicio para estados
 
     private final EstadoModelAssembler assembler;
 
@@ -42,8 +43,12 @@ public class EstadoController {
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<Estado>> obtenerPorId(@PathVariable Integer id) {
         return estadoService.obtenerPorId(id)
-                .map(assembler::toModel)
-                .map(ResponseEntity::ok)
+                .map(estado -> {
+                    EntityModel<Estado> entityModel = assembler.toModel(estado);
+                    // Enlace para actualizar este estado
+                    entityModel.add(linkTo(methodOn(EstadoController.class).actualizarEstado(id, estado)).withRel("actualizar"));
+                    return ResponseEntity.ok(entityModel);
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -56,13 +61,17 @@ public class EstadoController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
-        // Delega a servicio el update
         return estadoService.obtenerPorId(id)
                 .map(estadoExistente -> {
                     estadoExistente.setRut(estado.getRut());
                     estadoExistente.setEstadoPedido(nuevoEstadoPedido);
                     Estado estadoActualizado = estadoService.updateEstado(estadoExistente);
-                    return ResponseEntity.ok(assembler.toModel(estadoActualizado));
+
+                    EntityModel<Estado> entityModel = assembler.toModel(estadoActualizado);
+                    // Enlace self para el estado actualizado
+                    entityModel.add(linkTo(methodOn(EstadoController.class).obtenerPorId(id)).withSelfRel());
+
+                    return ResponseEntity.ok(entityModel);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
